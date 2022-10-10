@@ -26,8 +26,6 @@ struct CoinManager {
                 if let safeData = data {
                     
                     if let bitcoinPrice = self.parseJSON(safeData) {
-                        print("bitcoinPrice")
-                        print(bitcoinPrice)
                         let priceString = String(format: "%.2f", bitcoinPrice)
                         self.delegate?.didUpdatePrice(price: priceString, currency: currency)
                     }
@@ -37,13 +35,12 @@ struct CoinManager {
         }
     }
     
-    func parseJSON(_ data: Data) -> Double? {
+    func parseJSON(_ data: Data) -> [Rate]? {
         let decoder = JSONDecoder()
         
         do {
             let decodedData = try decoder.decode(CoinData.self, from: data)
-            let lastPrice = decodedData.rate
-            print(lastPrice)
+            let lastPrice = decodedData.rates
             return lastPrice
         } catch {
             delegate?.didFailWithError(error: error)
